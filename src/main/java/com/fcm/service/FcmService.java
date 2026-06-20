@@ -1,12 +1,14 @@
-package com.fcm;
+package com.fcm.service;
 
+import com.fcm.dto.FcmRequestDto;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -14,12 +16,17 @@ import org.springframework.stereotype.Service;
 public class FcmService {
     // fcm을 보내는 객체
     private final FirebaseMessaging firebaseMessaging;
+    // 임의의(연습용) userService - userId로 토큰 조회
+    private final UserService userService;
 
-    // fcm 토큰을 가진 유저에게 지정된 title과 body를 포함하여 푸시알림 전송
-    public void sendNotification(String title, String body, String fcmToken) {
-        log.info("Sending notification (title: {}, body: {}, fcmToken: {}", title, body, fcmToken);
-        send(createMessage(title, body, fcmToken));
+    // userId로 토큰을 조회하여, 해당 유저의 모든 디바이스에 푸시알림 전송 (1:N)
+    public void sendNotification(FcmRequestDto request) {
+        List<String> fcmTokens = userService.getFcmTokens(request.getUserId());
+        log.info("Sending notification (title: {}, body: {}, userId: {}, tokenCount: {})",
+            request.getTitle(), request.getBody(), request.getUserId(), fcmTokens.size());
 
+        fcmTokens.forEach(token ->
+            send(createMessage(request.getTitle(), request.getBody(), token)));
     }
 
     // 메세지 전송

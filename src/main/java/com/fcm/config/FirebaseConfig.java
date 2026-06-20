@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ import java.io.IOException;
 @Configuration
 public class FirebaseConfig {
     @Value("${firebase.service-account.path}")
-    private String SERVICE_ACCOUNT_PATH;
+    private Resource serviceAccount;
 
     /**
      * Firebase SDK 초기화 하는 이유
@@ -32,8 +32,7 @@ public class FirebaseConfig {
                 .setCredentials(
                     // 서비스 계정 키 읽기
                     GoogleCredentials.fromStream(
-                        new ClassPathResource(SERVICE_ACCOUNT_PATH)
-                            .getInputStream())
+                        serviceAccount.getInputStream())
                 )
                 .build();
 
