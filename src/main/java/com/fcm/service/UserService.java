@@ -27,7 +27,7 @@ public class UserService {
     public void seed() {
         User user = new User(1L, "테스트유저");
         // 실제 FCM 토큰으로 바꿔서 테스트하세요. (여러 개 추가 = 멀티 디바이스)
-        user.addToken("SAMPLE_FCM_TOKEN_REPLACE_ME");
+        user.addToken("eoQlJesg1A1jVtuYumJyt2:APA91bGnrh1pIRFoZWbtrlBNPhYQCSyxf4Hx0fmrAprVMTrhzWiXU-MEst7cuMRmMeBym_guMIhRYUFKfFBPg9E7CiLMtxDZOcWMq748GAs_YlWxBd-rSq8");
         store.put(user.getId(), user);
         log.info("[연습용] 더미 유저 {}명 시딩 완료", store.size());
     }
